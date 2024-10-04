@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Assessment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #e6f2ff);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-size: 18px;
+        }
+
+        #container {
+            background-color: #d6ffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            transition: all 0.3s ease;
+        }
+
+        #container:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #00bcd4;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        input[type="range"],
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            box-sizing: border-box;
+            appearance: none;
+            font-size: 1em;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background-color: #95eaf9;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 45px;
+        }
+
+        input[type="submit"] {
+            background-color: #00bcd4;
+            color: white;
+            padding: 16px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #008c9e;
+        }
+
+        .slider-value {
+            text-align: center;
+            margin-top: -15px;
+            font-size: 0.9em;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #00bcd4;
+            border-radius: 10px;
+            background-color: #e0f7fa;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .advice {
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1><i class="fas fa-stethoscope"></i> Health Assessment</h1>
+        <form id="assessmentForm">
+            <label for="age">Age:</label>
+            <input type="range" id="age" name="age" min="15" max="75" value="15" step="1">
+            <div class="slider-value">15</div>
+
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="0">Female</option>
+                <option value="1">Male</option>
+                <option value="2">Other</option>
+            </select>
+
+            <label for="bloodGlucose">Blood Glucose (mg/dL):</label>
+            <input type="range" id="bloodGlucose" name="bloodGlucose" min="50" max="350" value="50" step="1">
+            <div class="slider-value">50</div>
+
+            <label for="hyperTension">HyperTension:</label>
+            <select id="hyperTension" name="hyperTension">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <label for="bmi">BMI:</label>
+            <input type="range" id="bmi" name="bmi" min="15" max="45" value="15" step="0.1">
+            <div class="slider-value">15</div>
+
+            <label for="smokingHistory">Smoking History:</label>
+            <select id="smokingHistory" name="smokingHistory">
+                <option value="0">Never</option>
+                <option value="1">Don't want to tell</option>
+                <option value="2">Current</option>
+                <option value="3">Former</option>
+            </select>
+
+            <label for="hba1cLevel">HbA1c Level (%):</label>
+            <input type="range" id="hba1cLevel" name="hba1cLevel" min="3.5" max="20" value="3.5" step="0.01">
+            <div class="slider-value">3.50</div>
+
+            <label for="heartDisease">Heart Disease:</label>
+            <select id="heartDisease" name="heartDisease">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+
+            <input type="submit" value="Predict">
+        </form>
+        <div id="result" class="mt-3"></div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input[type="range"]').on('input', function () {
+                $(this).next('.slider-value').text($(this).val());
+            });
+
+            $('#assessmentForm').submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict',
+                    data: formData,
+                    success: function (response) {
+                        let prediction = response.prediction.toFixed(2);
+                        let message = `<h2>Prediction: ${prediction}% likelihood of diabetes</h2>`;
+
+                        if (prediction < 20) {
+                            message += '<p class="advice">There is almost no chance of you having diabetes, but looking after your health is always a good practice.</p>';
+                        } else if (prediction <= 40) {
+                            message += '<p class="advice">There is a slight chance of having diabetes. Maintaining a healthy lifestyle can mitigate this risk.</p>';
+                        } else if (prediction <= 60) {
+                            message += '<p class="advice">There is a moderate chance of having diabetes. Consider starting a healthy lifestyle and consulting a doctor.</p>';
+                        } else if (prediction <= 80) {
+                            message += '<p class="advice">There is a high chance of having diabetes. Leading a healthy lifestyle and consulting a doctor is recommended.</p>';
+                        } else {
+                            message += "<p class='advice'>There is a very high chance of having diabetes. It's crucial to lead a healthy lifestyle and consult a doctor.</p>";
+                        }
+
+                        // Add health suggestions based on user input
+                        const userInput = formData.split('&').reduce((acc, pair) => {
+                            const [key, value] = pair.split('=');
+                            acc[key] = decodeURIComponent(value);
+                            return acc;
+                        }, {});
+
+                        if (userInput.bmi < 18.5) {
+                            message += '<p class="advice">Your BMI is low. Consider a balanced diet to reach a healthy weight.</p>';
+                        } else if (userInput.bmi > 24.9) {
+                            message += '<p class="advice">Your BMI is high. A balanced diet and regular exercise can help reach a healthy weight.</p>';
+                        } else {
+                            message += '<p class="advice">Your BMI is within a healthy range. Keep up the good work!</p>';
+                        }
+
+                        if (userInput.hba1cLevel > 5.7) {
+                            message += '<p class="advice">Your HbA1c level is high. Monitoring your blood sugar levels and consulting a doctor is advised.</p>';
+                        } else {
+                            message += '<p class="advice">Your HbA1c level is within a healthy range. Keep maintaining your health!</p>';
+                        }
+
+                        if (userInput.smokingHistory == 2) {
+                            message += '<p class="advice">Smoking increases health risks. Consider quitting smoking for better health.</p>';
+                        } else if (userInput.smokingHistory == 3) {
+                            message += '<p class="advice">Congratulations on quitting smoking! Keep up the good work.</p>';
+                        }
+
+                        $('#result').html(message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
