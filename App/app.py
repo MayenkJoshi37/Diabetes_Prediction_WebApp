@@ -6,7 +6,7 @@ import warnings
 app = Flask(__name__)
 
 # Load model and scaler
-loaded_model, scaler = load_trained_model('App\Model_3_0.001_Bn_relu_.4_0.00001_40_512_LaReDrLrEpBs.h5', 'App\scaler.pkl')
+loaded_model, scaler = load_trained_model('Model_3_0.001_Bn_relu_.4_0.00001_40_512_LaReDrLrEpBs.h5', 'scaler.pkl')
 
 @app.route('/home')
 def home():
