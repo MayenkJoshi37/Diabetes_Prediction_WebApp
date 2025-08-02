@@ -1,0 +1,12 @@
+# ─── Exclude all HTML files from language stats ─────────────────────────────────
+*.html linguist-vendored
+*.htm  linguist-vendored
+
+# ─── If HTML files are inside subfolders like templates/, docs/, or web/ ─────────────────────────────────
+templates/** linguist-vendored
+docs/**      linguist-vendored
+web/**       linguist-vendored
+
+# ─── Optional: hide CSS or JavaScript if those obscure Python stats ─────────────────────────────────
+*.css linguist-vendored
+*.js  linguist-vendored
