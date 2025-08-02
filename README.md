@@ -122,32 +122,9 @@ http://127.0.0.1:5000/home
 
 ---
 
-## ⚠️ Caution & Medical Disclaimer
-
-🚫 **Not medical advice**: Informational only.  
-Predictions rely entirely on user-entered data and model training.  
-Health data is sensitive—implement HTTPS and data encryption in any deployment.  
-It is strongly advised to include a disclaimer, for example:
-
-> _“This tool is for informational purposes only and is not a substitute for professional medical diagnosis or treatment.”_
-
----
-
-## ⚖️ Contributions & License
-
-📝 The source code is available under an open-source license (e.g., MIT, Apache 2.0) of your choosing.
-
-**Contributing ideas:**
-- Add public diabetes datasets (e.g., Pima Indian dataset variants).  
-- Implement interpretability tools like SHAP or LIME to explain predictions.  
-- Extend with mobile or offline UI support.
-
----
-
 ## ✅ Quick Summary
 
 - `model.py`: trains and saves a dropout-regularized neural network model.  
 - `prediction.py`: loads saved model and scaler to make percentage-based diabetes predictions.  
 - `app.py`: Flask web app with routes for home, prediction form, and `/predict` JSON API.  
 - Provides a structured workflow: dataset ingestion → model training → input scaling → online inference.  
-
